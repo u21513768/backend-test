@@ -1,24 +1,18 @@
 {
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2",
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7",
-    "serverless-http": "^3.2.0",
-    "uuid": "^9.0.0"
-  },
+  "name": "backend-test",
+  "version": "1.0.0",
+  "description": "Backend test for Netlify",
   "scripts": {
-    "start": "netlify-lambda serve functions",
+    "start": "node server.js",
     "build": "netlify-lambda build functions"
   },
-  "name": "upload",
-  "version": "1.0.0",
-  "main": "server.js",
-  "devDependencies": {
-    "netlify-lambda": "^3.6.0"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "netlify-lambda": "^2.0.16",
+    "path": "^0.12.7",
+    "serverless-http": "^3.2.0",
+    "uuid": "^8.3.2"
+  }
 }
