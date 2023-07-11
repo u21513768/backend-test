@@ -8,6 +8,8 @@ const uuid = require('uuid');
 const path = require('path');
 const filePath = path.join(__dirname, './data.json');
 
+const port = process.env.PORT || 3000; 
+
 router.get('/get-user', (req, res) => {
     try {
       fs.readFile(filePath, 'utf8', (err, data) => {
@@ -237,6 +239,10 @@ router.get('/get-user', (req, res) => {
 
 app.use(json());
 app.use('/.netlify/functions/server', router); // Important!
+
+app.listen(port, () => { 
+    console.log(`Server is running on port ${port}`);
+  });
 
 module.exports = app;
 module.exports.handler = serverless(app);
