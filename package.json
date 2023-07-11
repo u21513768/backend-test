@@ -8,13 +8,15 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "build": "echo 'No build step required'"
+    "start": "netlify-lambda serve functions",
+    "build": "netlify-lambda build functions"
   },
   "name": "upload",
   "version": "1.0.0",
   "main": "server.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "netlify-lambda": "^3.6.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
