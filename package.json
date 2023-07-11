@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Backend test for Netlify",
   "scripts": {
-    "start": "node server.js",
+    "start": "netlify-lambda serve functions",
     "build": "netlify-lambda build functions"
   },
   "dependencies": {
@@ -11,6 +11,7 @@
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "netlify-lambda": "^2.0.16",
+    "nvm": "^0.0.4",
     "path": "^0.12.7",
     "serverless-http": "^3.2.0",
     "uuid": "^8.3.2"
