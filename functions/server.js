@@ -6,7 +6,7 @@ const router = express.Router();
 const fs = require('fs');
 const uuid = require('uuid');
 const path = require('path');
-const filePath = path.join(__dirname, 'functions', 'data.json')//(process.cwd(), 'functions', 'data.json');
+const filePath = path.join(__dirname, '..', 'functions', 'data.json')//(process.cwd(), 'functions', 'data.json');
 
 const port = process.env.PORT || 3000; 
 
