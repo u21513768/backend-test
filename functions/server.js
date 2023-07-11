@@ -15,7 +15,7 @@ router.get('/get-user', (req, res) => {
       fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
           console.error(err);
-          return res.status(500).json({ error: 'Failed to read Json file.' });
+          return res.status(500).json({ error: err });
         }
     
         returnData = JSON.parse(data);
