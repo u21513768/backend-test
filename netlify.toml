@@ -1,6 +1,3 @@
-[build]
-    functions = "functions-build"
-
 [[redirects]]
   force = true
   from = "/.netlify/functions/*"
