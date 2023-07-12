@@ -195,7 +195,7 @@ router.delete("/delete-user/:username", async (req, res) => {
 });
 
 app.use(json());
-app.use("/api", router); // Change the base URL path to "/api"
+app.use("/", router); // Change the base URL path to "/api"
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
