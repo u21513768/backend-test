@@ -485,7 +485,7 @@ router.delete('/delete-user/:username', async (req, res) => {
   
 
 app.use(json());
-app.use('/.netlify/functions/server', router); // Important!
+app.use('/', router); // Important!
 
 app.listen(port, () => { 
     console.log(`Server is running on port ${port}`);
