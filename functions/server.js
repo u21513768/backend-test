@@ -4,6 +4,7 @@ const app = express();
 const router = express.Router();
 const uuid = require('uuid');
 const port = process.env.PORT || 3000;
+const serverless = require('serverless-http')
 
 const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://u21513768:Quintin12@cluster0.tk9adsj.mongodb.net/?retryWrites=true&w=majority";
@@ -250,10 +251,11 @@ router.delete('/delete-user/:username', async (req, res) => {
 });
 
 app.use(json());
-app.use('/', router); // Important!
+app.use('/.netlify/functions/server', router); // Important!
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
 module.exports = app;
+module.exports.handler = serverless(app);
