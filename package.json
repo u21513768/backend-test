@@ -1,21 +1,10 @@
 {
-  "name": "Upload",
+  "name": "upload",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2",
-    "mongodb": "^5.7.0",
-    "netlify-lambda": "^2.0.16",
-    "serverless-http": "^3.2.0",
-    "uuid": "^9.0.0"
-  },
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node functions/server.js",
-    "build": "npm install",
-    "buildn": "netlify deploy"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

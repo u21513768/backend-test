@@ -82,24 +82,11 @@ router.post('/add-user', async (req, res) => {
       console.log("Fields empty or incomplete");
       return res.status(500).json({ error: 'Fields empty or incomplete.' });
     }
-
-    let client;
-
-    try {
-      // Create a new MongoClient
-      client = new MongoClient(uri, {
-        serverApi: {
-          version: ServerApiVersion.v1,
-          strict: true,
-          deprecationErrors: true,
-        },
-      });
-
       // Connect to the MongoDB cluster
-      await client.connect();
+      await collection.connect();
 
       // Access the "users" database and "Backend_Intern" collection
-      const collection = client.db("users").collection("Backend_Intern");
+      const client = collection.db("users").collection("Backend_Intern");
 
       // Generate username and ID
       newUser.username = await generateUsername(newUser);
@@ -108,20 +95,16 @@ router.post('/add-user', async (req, res) => {
       newUser.id = uuid.v4();
 
       // Insert the new user into the collection
-      await collection.insertOne(newUser);
+      await client.insertOne(newUser);
 
       res.json(newUser);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).send(err);//json({ error: 'Internal Server Error' });
     } finally {
       // Close the MongoDB client connection
       await client.close();
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
 });
 
 
