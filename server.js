@@ -97,9 +97,7 @@ async function generateUsername(newUser) {
     if (!vowels.includes(letter) && counter < 3) {
       username += letter.toLowerCase();
       counter++;
-    } else if (counter < 3) {
-      break;
-    }
+    } 
   }
 
   if (counter < 3) {
@@ -187,4 +185,3 @@ app.listen(port, () => {
 });
 
 module.exports = app;
-
