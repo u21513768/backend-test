@@ -1,6 +1,6 @@
 const express = require('express');
 const { json } = require('body-parser');
-const serverless = require('serverless-http');
+//const serverless = require('serverless-http');
 const app = express();
 const router = express.Router();
 const fs = require('fs');
@@ -492,4 +492,4 @@ app.listen(port, () => {
   });
 
 module.exports = app;
-module.exports.handler = serverless(app);
+//module.exports.handler = serverless(app);
