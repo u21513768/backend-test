@@ -1,3 +1,0 @@
-[build]
-    command = "node server.js"
-    publish = "<path_to_public_folder>"
