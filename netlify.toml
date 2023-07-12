@@ -1,4 +1,0 @@
-[build]
-    command = "node server.js"
-    publish = "."
-    functions = "functions"

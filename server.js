@@ -4,10 +4,9 @@ const app = express();
 const router = express.Router();
 const uuid = require('uuid');
 const port = process.env.PORT || 3000;
-const serverless = require('serverless-http')
 
-const { MongoClient } = require('mongodb');
-const uri = "mongodb+srv://u21513768:Quintin12@cluster0.tk9adsj.mongodb.net/?retryWrites=true&w=majority";
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri =  'mongodb+srv://u21513768:Quintin12@cluster0.tk9adsj.mongodb.net/?retryWrites=true&w=majority';
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 let collection;
 
@@ -16,8 +15,8 @@ async function connectToMongoDB() {
   try {
     await client.connect();
     console.log('Connected to MongoDB');
-    const db = client.db('BACKEND-TEST');
-    collection = db.collection('users');
+    const db = client.db('users');
+    collection = db.collection('Backend_Intern');
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
   }
@@ -28,12 +27,6 @@ connectToMongoDB();
 // GET all users
 router.get('/get-user', async (req, res) => {
   try {
-    // Connect to the MongoDB cluster
-    await client.connect();
-
-    // Access the "users" database and "Backend_Intern" collection
-    const collection = client.db("users").collection("Backend_Intern");
-
     // Find all users
     const users = await collection.find().toArray();
 
@@ -41,9 +34,6 @@ router.get('/get-user', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
-  } finally {
-    // Close the MongoDB client connection
-    await client.close();
   }
 });
 
@@ -51,12 +41,6 @@ router.get('/get-user/:username', async (req, res) => {
   const username = req.params.username;
 
   try {
-    // Connect to the MongoDB cluster
-    await client.connect();
-
-    // Access the "users" database and "Backend_Intern" collection
-    const collection = client.db("users").collection("Backend_Intern");
-
     // Find the user with the matching username
     const user = await collection.findOne({ username });
 
@@ -68,9 +52,6 @@ router.get('/get-user/:username', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
-  } finally {
-    // Close the MongoDB client connection
-    await client.close();
   }
 });
 
@@ -82,29 +63,20 @@ router.post('/add-user', async (req, res) => {
       console.log("Fields empty or incomplete");
       return res.status(500).json({ error: 'Fields empty or incomplete.' });
     }
-      // Connect to the MongoDB cluster
-      await collection.connect();
 
-      // Access the "users" database and "Backend_Intern" collection
-      const client = collection.db("users").collection("Backend_Intern");
+    // Generate username and ID
+    newUser.username = await generateUsername(newUser);
+    newUser.id = uuid.v4();
 
-      // Generate username and ID
-      newUser.username = await generateUsername(newUser);
+    console.log(newUser);
+    // Insert the new user into the collection
+    await collection.insertOne(newUser);
 
-      // Generate username and ID
-      newUser.id = uuid.v4();
-
-      // Insert the new user into the collection
-      await client.insertOne(newUser);
-
-      res.json(newUser);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send(err);//json({ error: 'Internal Server Error' });
-    } finally {
-      // Close the MongoDB client connection
-      await client.close();
-    }
+    res.json(newUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 
@@ -114,8 +86,8 @@ async function generateUsername(newUser) {
   const lastName = newUser.lastName;
   let username = "";
   username += firstName.substring(0, 3).toLowerCase();
-  console.log("first Name: " + firstName);
-  console.log("last Name: " + lastName);
+  //console.log("first Name: " + firstName);
+  //console.log("last Name: " + lastName);
 
   const vowels = ["a", "e", "i", "o", "u"];
 
@@ -140,12 +112,6 @@ async function generateUsername(newUser) {
   let occurrence = 1;
 
   try {
-    // Connect to the MongoDB cluster
-    await client.connect();
-
-    // Access the "users" database and "Backend_Intern" collection
-    const collection = client.db("users").collection("Backend_Intern");
-
     // Query the database to find users with matching usernames
     const regex = new RegExp('^' + username, 'i');
     const result = await collection.find({ username: regex }).toArray();
@@ -159,12 +125,10 @@ async function generateUsername(newUser) {
     occurrence = maxOccurrence + 1;
   } catch (err) {
     console.error(err);
-  } finally {
-    // Close the MongoDB client connection
-    await client.close();
   }
 
   username += String(occurrence).padStart(3, '0');
+  console.log(username);
   return username;
 }
 
@@ -178,12 +142,6 @@ router.put('/edit-user', async (req, res) => {
       return res.status(500).json({ error: 'Fields empty or incomplete.' });
     }
 
-    // Connect to the MongoDB cluster
-    await client.connect();
-
-    // Access the "users" database and "Backend_Intern" collection
-    const collection = client.db("users").collection("Backend_Intern");
-
     // Find the user to update
     const filter = { username: editUser.username, id: editUser.id };
     const update = { $set: editUser };
@@ -194,13 +152,10 @@ router.put('/edit-user', async (req, res) => {
       return res.json({ error: 'User not found.' });
     }
 
-    res.json(result.value);
+    res.json(editUser);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
-  } finally {
-    // Close the MongoDB client connection
-    await client.close();
   }
 });
 
@@ -208,12 +163,6 @@ router.put('/edit-user', async (req, res) => {
 router.delete('/delete-user/:username', async (req, res) => {
   try {
     const username = req.params.username;
-
-    // Connect to the MongoDB cluster
-    await client.connect();
-
-    // Access the "users" database and "Backend_Intern" collection
-    const collection = client.db("users").collection("Backend_Intern");
 
     // Delete the user
     const result = await collection.findOneAndDelete({ username });
@@ -227,18 +176,15 @@ router.delete('/delete-user/:username', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
-  } finally {
-    // Close the MongoDB client connection
-    await client.close();
   }
 });
 
 app.use(json());
-app.use('/.netlify/functions/server', router); // Important!
+app.use('/api', router); // Change the base URL path to "/api"
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
 module.exports = app;
-module.exports.handler = serverless(app);
+
