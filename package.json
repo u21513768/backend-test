@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Backend test for Netlify",
   "scripts": {
-    "start": "netlify-lambda serve functions",
+    "start": "node server.js",
     "build": "npm install"
   },
   "dependencies": {
