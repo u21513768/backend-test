@@ -387,6 +387,7 @@ router.delete('/delete-user/:username', async (req, res) => {
     }
   
     username += String(occurrence).padStart(3, '0');
+    suffix.padEnd(3, 'x');
     return username;
   }*/
   

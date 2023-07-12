@@ -4,7 +4,7 @@
   "description": "Backend test for Netlify",
   "scripts": {
     "start": "netlify-lambda serve functions",
-    "build": "netlify-lambda build functions"
+    "build": "npm install"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
