@@ -1,31 +1,35 @@
-const express = require('express');
-const { json } = require('body-parser');
+const express = require("express");
+const { json } = require("body-parser");
 const app = express();
 const router = express.Router();
-const uuid = require('uuid');
+const uuid = require("uuid");
 const port = process.env.PORT || 3000;
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri =  'mongodb+srv://u21513768:Quintin12@cluster0.tk9adsj.mongodb.net/?retryWrites=true&w=majority';
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const uri =
+  "mongodb+srv://u21513768:Quintin12@cluster0.tk9adsj.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 let collection;
 
 // Connect to MongoDB
 async function connectToMongoDB() {
   try {
     await client.connect();
-    console.log('Connected to MongoDB');
-    const db = client.db('users');
-    collection = db.collection('Backend_Intern');
+    console.log("Connected to MongoDB");
+    const db = client.db("users");
+    collection = db.collection("Backend_Intern");
   } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
+    console.error("Failed to connect to MongoDB:", error);
   }
 }
 
 connectToMongoDB();
 
 // GET all users
-router.get('/get-user', async (req, res) => {
+router.get("/get-user", async (req, res) => {
   try {
     // Find all users
     const users = await collection.find().toArray();
@@ -33,11 +37,11 @@ router.get('/get-user', async (req, res) => {
     res.json(users);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-router.get('/get-user/:username', async (req, res) => {
+router.get("/get-user/:username", async (req, res) => {
   const username = req.params.username;
 
   try {
@@ -45,23 +49,29 @@ router.get('/get-user/:username', async (req, res) => {
     const user = await collection.findOne({ username });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
+      return res.status(404).json({ error: "User not found." });
     }
 
     res.json(user);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 // POST a new user
-router.post('/add-user', async (req, res) => {
+router.post("/add-user", async (req, res) => {
   try {
     const newUser = req.body;
-    if (!newUser || !newUser.firstName || !newUser.lastName || !newUser.email || !newUser.role) {
+    if (
+      !newUser ||
+      !newUser.firstName ||
+      !newUser.lastName ||
+      !newUser.email ||
+      !newUser.role
+    ) {
       console.log("Fields empty or incomplete");
-      return res.status(500).json({ error: 'Fields empty or incomplete.' });
+      return res.status(500).json({ error: "Fields empty or incomplete." });
     }
 
     // Generate username and ID
@@ -75,10 +85,9 @@ router.post('/add-user', async (req, res) => {
     res.json(newUser);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 // Generate username function
 async function generateUsername(newUser) {
@@ -102,7 +111,7 @@ async function generateUsername(newUser) {
 
   if (counter < 3) {
     while (counter < 3) {
-      username += 'x';
+      username += "x";
       counter++;
     }
   }
@@ -111,7 +120,7 @@ async function generateUsername(newUser) {
 
   try {
     // Query the database to find users with matching usernames
-    const regex = new RegExp('^' + username, 'i');
+    const regex = new RegExp("^" + username, "i");
     const result = await collection.find({ username: regex }).toArray();
 
     // Find the maximum occurrence for the matching usernames
@@ -125,19 +134,27 @@ async function generateUsername(newUser) {
     console.error(err);
   }
 
-  username += String(occurrence).padStart(3, '0');
+  username += String(occurrence).padStart(3, "0");
   console.log(username);
   return username;
 }
 
 // PUT updates a specific user based on username
-router.put('/edit-user', async (req, res) => {
+router.put("/edit-user", async (req, res) => {
   try {
     const editUser = req.body;
 
-    if (!editUser || !editUser.firstName || !editUser.lastName || !editUser.email || !editUser.role || !editUser.username || !editUser.id) {
+    if (
+      !editUser ||
+      !editUser.firstName ||
+      !editUser.lastName ||
+      !editUser.email ||
+      !editUser.role ||
+      !editUser.username ||
+      !editUser.id
+    ) {
       console.log("Fields empty or incomplete");
-      return res.status(500).json({ error: 'Fields empty or incomplete.' });
+      return res.status(500).json({ error: "Fields empty or incomplete." });
     }
 
     // Find the user to update
@@ -147,18 +164,18 @@ router.put('/edit-user', async (req, res) => {
     const result = await collection.findOneAndUpdate(filter, update, options);
 
     if (!result.value) {
-      return res.json({ error: 'User not found.' });
+      return res.json({ error: "User not found." });
     }
 
     res.json(editUser);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 // DELETE a specific user based on username
-router.delete('/delete-user/:username', async (req, res) => {
+router.delete("/delete-user/:username", async (req, res) => {
   try {
     const username = req.params.username;
 
@@ -166,19 +183,19 @@ router.delete('/delete-user/:username', async (req, res) => {
     const result = await collection.findOneAndDelete({ username });
 
     if (!result.value) {
-      return res.json({ error: 'User not found.' });
+      return res.json({ error: "User not found." });
     }
 
     console.log("user successfully deleted\n");
     res.json(result.value);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 app.use(json());
-app.use('/api', router); // Change the base URL path to "/api"
+app.use("/api", router); // Change the base URL path to "/api"
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
