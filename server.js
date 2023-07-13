@@ -26,7 +26,7 @@ async function connectToMongoDB() {
 connectToMongoDB();
 
 // GET all users
-router.get("/get-user", async (req, res) => {
+router.get("/get-users", async (req, res) => {
   try {
     
     const users = await collection.find().toArray();
