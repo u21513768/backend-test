@@ -8,10 +8,7 @@ const port = process.env.PORT || 3000;
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri =
   "mongodb+srv://u21513768:Quintin12@cluster0.tk9adsj.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, });
 let collection;
 
 // Connect to MongoDB
@@ -31,7 +28,7 @@ connectToMongoDB();
 // GET all users
 router.get("/get-user", async (req, res) => {
   try {
-    // Find all users
+    
     const users = await collection.find().toArray();
 
     res.json(users);
@@ -41,6 +38,7 @@ router.get("/get-user", async (req, res) => {
   }
 });
 
+// GET user by username
 router.get("/get-user/:username", async (req, res) => {
   const username = req.params.username;
 
@@ -63,14 +61,8 @@ router.get("/get-user/:username", async (req, res) => {
 router.post("/add-user", async (req, res) => {
   try {
     const newUser = req.body;
-    if (
-      !newUser ||
-      !newUser.firstName ||
-      !newUser.lastName ||
-      !newUser.email ||
-      !newUser.role
-    ) {
-      console.log("Fields empty or incomplete");
+    if (!newUser || !newUser.firstName || !newUser.lastName || !newUser.email || !newUser.role) {
+      //console.log("Fields empty or incomplete");
       return res.status(500).json({ error: "Fields empty or incomplete." });
     }
 
@@ -78,10 +70,12 @@ router.post("/add-user", async (req, res) => {
     newUser.username = await generateUsername(newUser);
     newUser.id = uuid.v4();
 
-    console.log(newUser);
+    //console.log(newUser);
+
     // Insert the new user into the collection
     await collection.insertOne(newUser);
 
+    // Return the new user in the response
     res.json(newUser);
   } catch (err) {
     console.error(err);
@@ -119,7 +113,7 @@ async function generateUsername(newUser) {
   let occurrence = 1;
 
   try {
-    // Query the database to find users with matching usernames
+    // Regex expression to match the first 6 characters of the usernames
     const regex = new RegExp("^" + username, "i");
     const result = await collection.find({ username: regex }).toArray();
 
@@ -135,24 +129,16 @@ async function generateUsername(newUser) {
   }
 
   username += String(occurrence).padStart(3, "0");
-  console.log(username);
+  //console.log(username);
   return username;
 }
 
-// PUT updates a specific user based on username
+// PUT update a specific user based on username and id of body
 router.put("/edit-user", async (req, res) => {
   try {
     const editUser = req.body;
 
-    if (
-      !editUser ||
-      !editUser.firstName ||
-      !editUser.lastName ||
-      !editUser.email ||
-      !editUser.role ||
-      !editUser.username ||
-      !editUser.id
-    ) {
+    if (!editUser || !editUser.firstName || !editUser.lastName || !editUser.email || !editUser.role || !editUser.username || !editUser.id) {
       console.log("Fields empty or incomplete");
       return res.status(500).json({ error: "Fields empty or incomplete." });
     }
