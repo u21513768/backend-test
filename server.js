@@ -172,8 +172,10 @@ router.delete("/delete-user/:username", async (req, res) => {
       return res.json({ error: "User not found." });
     }
 
-    console.log("user successfully deleted\n");
-    res.json(result.value);
+    const user = result.value;
+    user.response = "User successfully deleted."
+    console.log("User successfully deleted\n");
+    res.json(user);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
